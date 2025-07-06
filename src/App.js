@@ -1,8 +1,11 @@
 import xImg from './assets/X.png';
 import oImg from './assets/O.png';
+import plusImg from './assets/Plus.png';
 import ghost from './assets/Invalid.png';
 import xGhost from './assets/X_ghost.png';
 import oGhost from './assets/O_ghost.png';
+import plusGhost from './assets/Plus.png';
+import Instructions from './Instructions';
 import { useState } from 'react';
 
 function Square({ value, onSquareClick, currentPlayer, gameOver }) {
@@ -56,18 +59,18 @@ function Square({ value, onSquareClick, currentPlayer, gameOver }) {
   );
 }
 
-function PlayAgain({ onClick }) {
+function PlayAgain({ onClick, gameOver }) {
   return (
     <button
       onClick={onClick}
       className="mt-6 px-6 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition mx-auto block"
     >
-      Play again?
+      {gameOver ? "Play again?" : "Start Over"}
     </button>
   );
 }
 
-export default function Board() {
+export default function App() {
   const [xIsNext, setXIsNext] = useState(true);
   const [squares, setSquares] = useState(Array(9).fill(null));
 
@@ -104,8 +107,12 @@ export default function Board() {
 
   return (
     <>
-
       <div className={`text-4xl font-bold mb-6 text-center ${statusColor}`}>{status}</div>
+
+      <div className="mb-6">
+        <PlayAgain onClick={resetGame} gameOver={winner || isBoardFull} />
+      </div>
+
       <div className="flex justify-center">
         <Square
           value={squares[0]}
@@ -167,8 +174,9 @@ export default function Board() {
         />
       </div>
 
-      {winner && <PlayAgain onClick={resetGame} />}
-      {!winner && isBoardFull && <PlayAgain onClick={resetGame} />}
+      <div className="mt-6">
+        <Instructions />
+      </div>
     </>
   );
 }
