@@ -8,9 +8,11 @@ import plusGhost from './assets/Plus.png';
 import Instructions from './Instructions';
 import { useState, useEffect } from 'react';
 
+// Renders a single square (9 total)
 function Square({ value, onSquareClick, currentPlayer, gameWiped, plusTurn }) {
   const [isHovered, setIsHovered] = useState(false);
 
+  // Renders placed piece (X, O, or +)
   const renderPiece = () => {
     if (value === 'X') {
       return <img src={xImg} alt="X" className="w-full h-full object-contain" />;
@@ -23,31 +25,22 @@ function Square({ value, onSquareClick, currentPlayer, gameWiped, plusTurn }) {
     }
   };
 
+  // Renders hover (ghost) image
   const renderHover = () => {
     if (!gameWiped && isHovered) {
       if (value === null) {
-        if (plusTurn[currentPlayer] > 0) {
-          return (
-            <img
-              src={plusGhost}
-              alt="Place +?"
-              className="absolute w-full h-full object-contain opacity-70 pointer-events-none"
-            />
-          );
-        } else {
-          return (
-            <img
-              src={currentPlayer === 'X' ? xGhost : oGhost}
-              alt="Place here?"
-              className="absolute w-full h-full object-contain opacity-70 pointer-events-none"
-            />
-          );
-        }
+        return (
+          <img
+            src={plusTurn[currentPlayer] > 0 ? plusGhost : currentPlayer === 'X' ? xGhost : oGhost}
+            alt="Place here?"
+            className="absolute w-full h-full object-contain opacity-70 pointer-events-none"
+          />
+        );
       } else {
         return (
           <img
             src={ghost}
-            alt="Invalid move"
+            alt="Cannot place here."
             className="absolute w-full h-full object-contain opacity-50 pointer-events-none"
           />
         );
@@ -71,6 +64,7 @@ function Square({ value, onSquareClick, currentPlayer, gameWiped, plusTurn }) {
   );
 }
 
+// Reset button
 function PlayAgain({ onClick, gameOver }) {
   return (
     <button
@@ -82,29 +76,27 @@ function PlayAgain({ onClick, gameOver }) {
   );
 }
 
+// Main App
 export default function App() {
 
-  const [xIsNext, setXIsNext] = useState(true);
-  const [squares, setSquares] = useState(Array(9).fill(null));
-  const [plusTurn, setPlusTurn] = useState({ X: 0, O: 0 });
-
-  const [miniWipe, setMiniWipe] = useState(false);
+  const [xIsNext, setXIsNext] = useState(true); // Tracks whose turn
+  const [squares, setSquares] = useState(Array(9).fill(null)); // 3x3 board array
+  const [plusTurn, setPlusTurn] = useState({ X: 0, O: 0 }); // Counter for '+' tokens for each player
+  const [miniWipe, setMiniWipe] = useState(false); // Whether a board wipe just occurred
 
   const currentPlayer = xIsNext ? 'X' : 'O';
   const miniWinner = calculateMiniWinner(squares);
   const isBoardFull = squares.every(square => square !== null);
   const gameWinner = calculateWinner({ squares, xIsNext });
 
-
+  // Tracks player clicks
   function handleClick(i) {
-    if (miniWipe) {
-      setMiniWipe(false); // Reset flag after placing the earned "+"
-    }
-    if (miniWinner || squares[i]) {
-      return;
-    }
+    if (miniWipe) setMiniWipe(false); // clear wipe flag after mini wipe
+    if (gameWinner || miniWinner || squares[i]) return; // prevent moves after gameWin or miniWin or on filled square
+
     const nextSquares = squares.slice();
 
+    // Players forced to immediately use + tokens earned
     if (plusTurn[currentPlayer] > 0) {
       nextSquares[i] = '+';
       setPlusTurn(prev => ({ ...prev, [currentPlayer]: 0 })); // consume +
@@ -113,9 +105,10 @@ export default function App() {
     }
 
     setSquares(nextSquares);
-    setXIsNext(!xIsNext);
+    setXIsNext(!xIsNext); // switch turn
   }
 
+  // Full reset
   function resetGame() {
     setSquares(Array(9).fill(null));
     setXIsNext(true);
@@ -123,6 +116,7 @@ export default function App() {
     setMiniWipe(false);
   }
 
+  // Display game status on top
   let status;
   let statusColor;
 
@@ -130,16 +124,12 @@ export default function App() {
     status = `Winner: ${gameWinner}`;
     statusColor = gameWinner === 'X' ? 'text-red-600' : 'text-blue-600';
   } else {
-    status = 'Next player: ' + currentPlayer;
-    if (plusTurn[currentPlayer] > 0) {
-      statusColor = 'text-yellow-500';
-    }
-    else {
-      statusColor = xIsNext ? 'text-red-600' : 'text-blue-600';
-    }
+    status = `Next player: ${currentPlayer}`;
+    statusColor = plusTurn[currentPlayer] > 0 ? 'text-yellow-500' : (xIsNext ? 'text-red-600' : 'text-blue-600');
   }
 
-
+  // Triggers mini wipe after 3 in a row
+  // Only '+' tokens are remain on board
   useEffect(() => {
     if (miniWinner && !gameWinner) {
       setPlusTurn(prev => ({
@@ -149,6 +139,7 @@ export default function App() {
 
       // Start mini wipe after a short delay to allow board display
       setTimeout(() => {
+        // Clear board except '+'
         setSquares(prevSquares =>
           prevSquares.map(val => (val === '+' ? '+' : null))
         );
@@ -159,12 +150,15 @@ export default function App() {
 
   return (
     <>
+      {/* Status */}
       <div className={`text-4xl font-bold mb-6 text-center ${statusColor}`}>{status}</div>
 
+      {/* Reset Button */}
       <div className="mb-6">
         <PlayAgain onClick={resetGame} gameOver={gameWinner} />
       </div>
 
+      {/* Board */}
       <div className="flex justify-center">
         <Square
           value={squares[0]}
@@ -235,6 +229,7 @@ export default function App() {
         />
       </div>
 
+      {/* Instructions */}
       <div className="mt-6">
         <Instructions />
       </div>
@@ -242,7 +237,7 @@ export default function App() {
   );
 }
 
-// Detects any 3 in a row
+// Detects mini win, granting '+'
 function calculateMiniWinner(squares) {
   const lines = [
     [0, 1, 2],
@@ -275,7 +270,7 @@ function calculateMiniWinner(squares) {
   return null;
 }
 
-// Detects 3 '+' in a row
+// Detects 3 '+' in a row, ending the game
 function calculateWinner({ squares, xIsNext }) {
   const lines = [
     [0, 1, 2],
