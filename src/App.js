@@ -128,8 +128,7 @@ export default function App() {
     statusColor = plusTurn[currentPlayer] > 0 ? 'text-yellow-500' : (xIsNext ? 'text-red-600' : 'text-blue-600');
   }
 
-  // Triggers mini wipe after 3 in a row
-  // Only '+' tokens are remain on board
+  // Triggers mini wipe after 3 in a row; '+' granted
   useEffect(() => {
     if (miniWinner && !gameWinner) {
       setPlusTurn(prev => ({
@@ -147,6 +146,18 @@ export default function App() {
       }, 500); // slight delay to let player see win
     }
   }, [miniWinner, gameWinner]);
+
+  // Triggers mini wipe after tie; no '+' granted
+  useEffect(() => {
+    if (isBoardFull && !miniWinner && !gameWinner) {
+      setTimeout(() => {
+        setSquares(prevSquares =>
+          prevSquares.map(val => (val === '+' ? '+' : null))
+        );
+        setMiniWipe(true); // still allow '+' use next turn
+      }, 500); // brief delay to show full board
+    }
+  }, [isBoardFull, miniWinner, gameWinner]);
 
   return (
     <>
@@ -284,7 +295,7 @@ function calculateWinner({ squares, xIsNext }) {
   ];
   for (let [a, b, c] of lines) {
     if (squares[a] === '+' && squares[b] === '+' && squares[c] === '+') {
-      return xIsNext ? 'O' : 'X'; // Give credit to the current player
+      return xIsNext ? 'X' : 'O'; // Give credit to the opposite player
     }
   }
   return null;

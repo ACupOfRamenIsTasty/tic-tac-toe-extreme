@@ -16,41 +16,50 @@ export default function Instructions() {
             {isOpen && (
                 <div className="mt-4 bg-gray-100 border border-gray-300 p-4 rounded text-gray-800 space-y-4">
                     <p>
-                        <strong>X's and O's by themselves are boring...</strong> Let's add a third symbol!
+                        <strong>X's and O's by themselves are boring...</strong> Let’s add a third symbol!
                     </p>
 
                     <p>
-                        Whenever you <strong>connect three in a row</strong> or <strong>fill up the board</strong>, the board will automatically clear.
+                        Whenever a player <strong>connects three in a row</strong> using any combination of their symbol and "+" (e.g. <strong>X + X</strong> or <strong>O O +</strong>), it's called a <strong>mini win</strong>.
                     </p>
 
                     <p>
-                        If you connect three in a row, you’ll gain a <strong>"+"</strong> symbol for your next turn! These symbols act as both an <strong>X</strong> and an <strong>O</strong>, and <strong>will NOT be wiped off the board</strong>.
+                        A <strong>mini win</strong> rewards that player with a <strong>"+"</strong> on their next turn and triggers a <strong>mini wipe</strong>—the board clears, but all <strong>"+"</strong> symbols stay.
                     </p>
 
                     <p>
-                        This means you can connect combinations like <strong>X + X</strong> or <strong>O O +</strong> to wipe the board and gain another "+"!
+                        If the board fills up without anyone earning a mini win, a <strong>mini wipe</strong> occurs <strong>without a "+" awarded</strong>.
                     </p>
 
-                    <p>
-                        Connect <strong>three "+" in a row</strong> to secure victory, regardless of who placed each "+". Be careful though—your opponent can also take advantage of the "+" symbols you place!
+                    <p className="text-green-900 bg-green-100 border-l-4 border-green-500 p-2 rounded">
+                        🏆 <strong>Game win:</strong><br />
+                        If <strong>three "+" are connected in a row</strong>, the game ends.<br />
+                        The player who placed the third and final "+" <strong>loses the game</strong>.<br />
+                        To win the game, <strong>force your opponent</strong> to place the third "+".<br />
+                    </p>
+
+                    <p className="text-yellow-900 bg-yellow-100 border-l-4 border-yellow-500 p-2 rounded">
+                        ⚠️ <strong>Every "+" you place can be used against you!</strong><br />
+                        They are wildcards and count as <strong>both X and O</strong>.<br />
+                        If you're <strong>O</strong> and place a "+", your opponent <strong>X</strong> can use it to complete a line like <strong>+ X +</strong>, giving them a mini win.<br />
                     </p>
 
                     <div className="text-center">
                         <img
                             src={instructionsGif}
                             alt="Instructions demo"
-                            className="mt-4 rounded shadow-md w-full max-w-md mx-auto"
+                            className="mt-4 rounded shadow-md w-full mx-auto"
                         />
                         <p className="text-sm text-gray-500 mt-2">
-                            This game was inspired by {' '}
+                            This game was inspired by{' '}
                             <a
                                 href="https://youtu.be/h5hMNF3kDm0"
                                 className="underline hover:text-gray-700"
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
-                                <em>Tic! Tac! Toe! ft. Tak x Corbin</em>.
-                            </a>
+                                <em>Tic! Tac! Toe! ft. Tak x Corbin</em>
+                            </a>.
                         </p>
                     </div>
                 </div>
