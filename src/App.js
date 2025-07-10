@@ -1,3 +1,5 @@
+import logo1 from './assets/tictactoe.png';
+import logo2 from './assets/extreme.png';
 import xImg from './assets/X.png';
 import oImg from './assets/O.png';
 import plusImg from './assets/Plus.png';
@@ -161,11 +163,30 @@ export default function App() {
 
   return (
     <>
-      {/* Status */}
-      <div className={`text-4xl font-bold mb-6 text-center ${statusColor}`}>{status}</div>
+      {/* Logo */}
+      <div className="flex flex-col items-center space-y-2 mb-4">
+        <img
+          src={logo1}
+          alt="TIC TAC TOE"
+          className="w-1/2"
+          style={{ padding: 0, margin: 0 }}
+        />
+        <img
+          src={logo2}
+          alt="-EX+REME-"
+          className="w-[50%] object-fill"
+          style={{ aspectRatio: '15/2', padding: 0, margin: 0 }}
+        />
+
+        {/* Status */}
+        <div className={`text-4xl font-bold text-center ${statusColor}`}>
+          {status}
+        </div>
+      </div>
+
 
       {/* Reset Button */}
-      <div className="mb-6">
+      <div className="mb-3">
         <PlayAgain onClick={resetGame} gameOver={gameWinner} />
       </div>
 
@@ -241,7 +262,7 @@ export default function App() {
       </div>
 
       {/* Instructions */}
-      <div className="mt-6">
+      <div className="mt-3">
         <Instructions />
       </div>
     </>
