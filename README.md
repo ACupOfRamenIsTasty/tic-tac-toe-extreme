@@ -27,7 +27,30 @@ It correctly bundles React in production mode and optimizes the build for the be
 The build is minified and the filenames include the hashes.\
 Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### `npm run deploy`
+Builds the app and publishes it to GitHub Pages using the `homepage` field in `package.json`.
+
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
+2. Deploy the app:
+   ```bash
+   npm run deploy
+   ```
+3. Open the published site:
+   ```text
+   https://ACupOfRamenIsTasty.github.io/tic-tac-toe-extreme
+   ```
+
+> The app is published from the `build` folder, so `gh-pages` must use `-d build`.
+
+If you want to preview the production build locally instead, run:
+
+```bash
+npm run build
+npx serve -s build
+```
 
 ### `npm run eject`
 
