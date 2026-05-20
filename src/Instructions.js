@@ -41,12 +41,12 @@ export default function Instructions() {
 
                     <p className="text-green-900 bg-green-100 border-l-4 border-green-500 p-2 rounded">
                         🏆 <strong>Game win:</strong><br />
-                        If <strong>three "+" are connected in a row</strong>, the game ends. The player who placed the final "+" <strong>wins the game</strong>.
+                        If <strong>three "+" are connected in a row</strong>, the game ends. The player who placed the final "+" <strong>loses the game</strong>.
                     </p>
 
                     <p className="text-yellow-900 bg-yellow-100 border-l-4 border-yellow-500 p-2 rounded">
-                        ⚠️ <strong>Every "+" you place can be used against you!</strong><br />
-                        They are wildcards and are treated as <strong>both X and O</strong>. If you're <strong>O</strong> and place a "+", your opponent <strong>X</strong> can use it to complete a line like <strong>+ X +</strong>, giving them a mini win.<br />
+                        ⚠️ <strong>Every "+" can be used against you!</strong><br />
+                        They are wildcards and are treated as <strong>both X and O</strong>. If you're <strong>O</strong> and place a "+", try to force your opponent <strong>X</strong> into losing the game (e.g. <strong>+ + +</strong>).<br />
                     </p>
 
                     <div className="text-center">
